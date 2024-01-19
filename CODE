@@ -1,0 +1,73 @@
+# Import necessary libraries
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the data into a Pandas DataFrame
+# Replace 'your_dataset.csv' with your actual file path
+uber_data = pd.read_csv('/content/drive/MyDrive/foot_ulcer (stu) - DL/uber-rides-dataset.csv')
+
+# Display the first few rows of the dataset
+print("1. Data Loading and Exploration:")
+print(uber_data.head())
+
+# Display summary statistics and information about the dataset
+print("\nSummary Statistics:")
+print(uber_data.describe())
+print("\nDataset Information:")
+print(uber_data.info())
+
+# Pattern Detection
+
+# Identify peak ride hours
+uber_data['trip_start_time'] = pd.to_datetime(uber_data['trip_start_time'])
+uber_data['pickup_hour'] = uber_data['trip_start_time'].dt.hour
+
+# Count the number of rides for each hour
+peak_hours = uber_data['pickup_hour'].value_counts()
+
+# Display peak ride hours
+print("\nPattern Detection - Peak Ride Hours:")
+print(peak_hours)
+
+# Analyze the distribution of trip durations
+trip_duration_distribution = uber_data['trip_time'].describe()
+
+# Display trip duration distribution
+print("\nPattern Detection - Trip Duration Distribution:")
+print(trip_duration_distribution)
+
+# Relationship Identification
+
+# Identify the correlation between time of day and the number of rides
+hourly_ride_counts = uber_data.groupby('pickup_hour').size()
+
+# Display the relationship between time of day and ride counts
+print("\nRelationship Identification - Hourly Ride Counts:")
+print(hourly_ride_counts)
+
+# Step 3: Data Visualizations
+
+# Visualize peak ride hours
+plt.figure(figsize=(12, 6))
+sns.barplot(x=peak_hours.index, y=peak_hours.values)
+plt.title('Peak Ride Hours')
+plt.xlabel('Hour of the Day')
+plt.ylabel('Number of Rides')
+plt.show()
+
+# Visualize trip duration distribution
+plt.figure(figsize=(12, 6))
+sns.histplot(uber_data['trip_time'], bins=30, kde=True)
+plt.title('Distribution of Trip Durations')
+plt.xlabel('Trip Duration (minutes)')
+plt.ylabel('Frequency')
+plt.show()
+
+# Visualize the relationship between time of day and ride counts
+plt.figure(figsize=(12, 6))
+sns.lineplot(x=hourly_ride_counts.index, y=hourly_ride_counts.values)
+plt.title('Hourly Ride Counts')
+plt.xlabel('Hour of the Day')
+plt.ylabel('Number of Rides')
+plt.show()
